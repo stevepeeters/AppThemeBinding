@@ -1,7 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maui="clr-namespace:Microsoft.Maui.ApplicationModel;assembly=Microsoft.Maui.Essentials"
+             xmlns:local="clr-namespace:MauiApp1"
              x:Class="MauiApp1.MainPage">
+    <ContentPage.Resources>
+        <Color x:Key="Selected_LightColor">#cefad0</Color>
+        <Color x:Key="Selected_DarkColor">#008631</Color>
 
-    
+        <Color x:Key="Unselected_LightColor">#e0bbd2</Color>
+        <Color x:Key="Unselected_DarkColor">#79305a</Color>
+
+        <local:BoolToValueConverter x:Key="SelectedToThemedColor"
+                                    TrueValue="{AppThemeBinding Light={StaticResource Selected_LightColor}, Dark={StaticResource Selected_DarkColor}}"
+                                    FalseValue="{AppThemeBinding Light={StaticResource Unselected_LightColor}, Dark={StaticResource Unselected_DarkColor}}"/>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout>
+        <!-- Single checkbox to control checked state. -->
+        <CheckBox x:Name="TheCheckBox" HorizontalOptions="Center"/>
+        
+        <!-- Using appthemebinding in converter. -->
+        <Label HorizontalOptions="Center" Margin="0,50,0,0"
+               Text="[NOT Working] Using AppThemeBinding in Binding converter."/>
+        <Grid HeightRequest="50" WidthRequest="50" HorizontalOptions="Center"
+              BackgroundColor="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked, Converter={StaticResource SelectedToThemedColor}}"/>
+        
+        <!-- Using boxview overlay to override background color when selected. -->
+        <Label HorizontalOptions="Center" Margin="0,50,0,0"
+               Text="[Working] Using BoxView overlay to override background color when selected."/>
+        <Grid HeightRequest="50" WidthRequest="50" 
+              BackgroundColor="{AppThemeBinding Light={StaticResource Unselected_LightColor}, Dark={StaticResource Unselected_DarkColor}}">
+            <BoxView IsVisible="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked}"
+                     HorizontalOptions="Fill" VerticalOptions="Fill"
+                     BackgroundColor="{AppThemeBinding Light={StaticResource Selected_LightColor}, Dark={StaticResource Selected_DarkColor}}"/>
+        </Grid>
+        
+        <!-- Buttons to swith theme. -->
+        <HorizontalStackLayout HorizontalOptions="Center" Margin="0,50,0,0">
+            <Button Text="Request Light Theme" Margin="0,0,10,0" Clicked="OnRequestLightTheme"/>
+            <Button Text="Request Dark Theme" Clicked="OnRequestDarkTheme"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
 </ContentPage>
