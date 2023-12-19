@@ -19,24 +19,35 @@
     <VerticalStackLayout>
         <!-- Single checkbox to control checked state. -->
         <CheckBox x:Name="TheCheckBox" HorizontalOptions="Center"/>
-        
+
         <!-- Using appthemebinding in converter. -->
-        <Label HorizontalOptions="Center" Margin="0,50,0,0"
-               Text="[NOT Working] Using AppThemeBinding in Binding converter."/>
+        <Label Text="[NOT Working] Using AppThemeBinding in Binding converter." HorizontalOptions="Center" Margin="0,50,0,0" />
         <Grid HeightRequest="50" WidthRequest="50" HorizontalOptions="Center"
               BackgroundColor="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked, Converter={StaticResource SelectedToThemedColor}}"/>
-        
+
         <!-- Using boxview overlay to override background color when selected. -->
-        <Label HorizontalOptions="Center" Margin="0,50,0,0"
-               Text="[Working] Using BoxView overlay to override background color when selected."/>
+        <Label Text="[Working] Using BoxView overlay to override background color when selected." HorizontalOptions="Center" Margin="0,50,0,0" />
         <Grid HeightRequest="50" WidthRequest="50" 
               BackgroundColor="{AppThemeBinding Light={StaticResource Unselected_LightColor}, Dark={StaticResource Unselected_DarkColor}}">
             <BoxView IsVisible="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked}"
                      HorizontalOptions="Fill" VerticalOptions="Fill"
                      BackgroundColor="{AppThemeBinding Light={StaticResource Selected_LightColor}, Dark={StaticResource Selected_DarkColor}}"/>
         </Grid>
-        
-        <!-- Buttons to swith theme. -->
+
+        <!-- Using data triggers. -->
+        <Label Text="[Working] Using data triggers." HorizontalOptions="Center" Margin="0,50,0,0" />
+        <Grid HeightRequest="50" WidthRequest="50">
+            <Grid.Triggers>
+                <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked}" Value="True">
+                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Selected_LightColor}, Dark={StaticResource Selected_DarkColor}}" />
+                </DataTrigger>
+                <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked}" Value="False">
+                    <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Unselected_LightColor}, Dark={StaticResource Unselected_DarkColor}}" />
+                </DataTrigger>
+            </Grid.Triggers>
+        </Grid>
+
+        <!-- Buttons to switch theme. -->
         <HorizontalStackLayout HorizontalOptions="Center" Margin="0,50,0,0">
             <Button Text="Request Light Theme" Margin="0,0,10,0" Clicked="OnRequestLightTheme"/>
             <Button Text="Request Dark Theme" Clicked="OnRequestDarkTheme"/>
