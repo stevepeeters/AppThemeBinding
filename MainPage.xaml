@@ -11,6 +11,9 @@
         <Color x:Key="Unselected_LightColor">#e0bbd2</Color>
         <Color x:Key="Unselected_DarkColor">#79305a</Color>
 
+        <Color x:Key="PointerOver_LightColor">#add8e6</Color>
+        <Color x:Key="PointerOver_DarkColor">#00008b</Color>
+
         <local:BoolToValueConverter x:Key="SelectedToThemedColor"
                                     TrueValue="{AppThemeBinding Light={StaticResource Selected_LightColor}, Dark={StaticResource Selected_DarkColor}}"
                                     FalseValue="{AppThemeBinding Light={StaticResource Unselected_LightColor}, Dark={StaticResource Unselected_DarkColor}}"/>
@@ -22,13 +25,41 @@
 
         <!-- Using appthemebinding in converter. -->
         <Label Text="[NOT Working] Using AppThemeBinding in Binding converter." HorizontalOptions="Center" Margin="0,50,0,0" />
-        <Grid HeightRequest="50" WidthRequest="50" HorizontalOptions="Center"
-              BackgroundColor="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked, Converter={StaticResource SelectedToThemedColor}}"/>
+        <Grid HeightRequest="50" WidthRequest="50" HorizontalOptions="Center">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked, Converter={StaticResource SelectedToThemedColor}}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PointerOver_LightColor}, Dark={StaticResource PointerOver_DarkColor}}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>            
+        </Grid>
 
         <!-- Using boxview overlay to override background color when selected. -->
         <Label Text="[Working] Using BoxView overlay to override background color when selected." HorizontalOptions="Center" Margin="0,50,0,0" />
-        <Grid HeightRequest="50" WidthRequest="50" 
-              BackgroundColor="{AppThemeBinding Light={StaticResource Unselected_LightColor}, Dark={StaticResource Unselected_DarkColor}}">
+        <Grid HeightRequest="50" WidthRequest="50">
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Unselected_LightColor}, Dark={StaticResource Unselected_DarkColor}}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource PointerOver_LightColor}, Dark={StaticResource PointerOver_DarkColor}}"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+            
             <BoxView IsVisible="{Binding Source={x:Reference TheCheckBox}, Path=IsChecked}"
                      HorizontalOptions="Fill" VerticalOptions="Fill"
                      BackgroundColor="{AppThemeBinding Light={StaticResource Selected_LightColor}, Dark={StaticResource Selected_DarkColor}}"/>
